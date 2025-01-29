@@ -49,3 +49,19 @@ def get_contact(id):
     if not contact:
         return jsonify({"message": "Contacto no encontrado"}), 404
     return jsonify(contact.serialize())
+
+@app.route("/contact/<int:id>", methods=["PUT", "PATCH"])
+def edit_contact(id):
+    contact = Contact.query.get_or_404(id)
+
+    data = request.get_json()
+
+    if "name" in data:
+        contact.name = data["name"]
+    if "email" in data:
+        contact.name = data["email"]
+    if "phone" in data:
+        contact.name = data["phone"]
+    db.session.commit()
+
+    return jsonify({"message": "Contacto actualizado con exito", "contact": contact.serialize()}), 201
