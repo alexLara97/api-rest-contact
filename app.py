@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from wtforms.validators import email
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///contacts.db"
@@ -35,4 +36,9 @@ def get_contact():
 
 @app.route("/contacts", methods=["POST"])
 def create_contact():
-    return "Se creo un contacto"
+    data = request.get_json()
+    contact = Contact(name=data.get("name"), email=data.get("email"), phone=data.get("phone"))
+    db.session.add(contact)
+    db.session.commit()
+
+    return jsonify({"message": "Contacto creado con exito", "contact": contact.serialize()}), 201
