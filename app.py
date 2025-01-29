@@ -30,7 +30,7 @@ with app.app_context():
 
 # Crear rutas
 @app.route("/contacts", methods=["GET"])
-def get_contact():
+def get_contacts():
     contacts = Contact.query.all()
     return jsonify({"contacts": [contact.serialize() for contact in contacts]})
 
@@ -42,3 +42,10 @@ def create_contact():
     db.session.commit()
 
     return jsonify({"message": "Contacto creado con exito", "contact": contact.serialize()}), 201
+
+@app.route("/contact/<int:id>", methods=["GET"])
+def get_contact(id):
+    contact = Contact.query.get(id)
+    if not contact:
+        return jsonify({"message": "Contacto no encontrado"}), 404
+    return jsonify(contact.serialize())
