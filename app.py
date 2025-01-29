@@ -30,7 +30,8 @@ with app.app_context():
 # Crear rutas
 @app.route("/contacts", methods=["GET"])
 def get_contact():
-    return "Lista de contactos"
+    contacts = Contact.query.all()
+    return jsonify({"contacts": [contact.serialize() for contact in contacts]})
 
 @app.route("/contacts", methods=["POST"])
 def create_contact():
