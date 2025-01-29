@@ -65,3 +65,12 @@ def edit_contact(id):
     db.session.commit()
 
     return jsonify({"message": "Contacto actualizado con exito", "contact": contact.serialize()}), 201
+
+app.route("/contact/<int:id>", methods=["DELETE"])
+def delete_contact(id):
+    contact = Contact.query.get(id)
+    if not contact:
+        return jsonify({"message": "Contacto no encontrado"}), 404
+    db.session.delete(contact)
+    db.session.commit()
+    return jsonify({"message": "Contacto eliminado con exito"})
